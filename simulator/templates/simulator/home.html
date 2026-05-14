@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="favicon_maquina.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulador MT - UTP</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1 style="text-align: center">Simulador Máquina de Turing</h1>
+
+      {% if not loaded %}
+      <div class="card">
+        <h3>Cargar Definición Formal (.mt)</h3>
+        <form
+          action="{% url 'upload_file' %}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <p>Archivo .mt:</p>
+          <input type="file" name="file_mt" accept=".mt,.txt" required />
+          <p>Cadena de entrada:</p>
+          <input type="text" name="initial_input" placeholder="Ej: 1101" />
+          <br /><br />
+          <button type="submit">Inicializar Simulación</button>
+        </form>
+      </div>
+      {% else %}
+      <div class="card">
+        <div class="tape-container">
+          {% for char in tape %}
+          <div
+            class="cell {% if forloop.counter0 == head_pos %}active{% endif %}"
+          >
+            {{ char }} {% if forloop.counter0 == head_pos %}
+            <div class="head-pointer">▲</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        {% if halted %}
+        <div
+          class="result-container"
+          style="padding: 20px; border-radius: 8px; text-align: center"
+        >
+          <h2
+            class="{% if accepted %}result-accepted{% else %}result-rejected{% endif %}"
+          >
+            SIMULACIÓN FINALIZADA: {{ result_label }}
+          </h2>
+
+          <div style="margin: 15px 0">
+            <p style="color: #64748b; font-weight: bold; margin-bottom: 5px">
+              CONTENIDO FINAL DE LA CINTA:
+            </p>
+            <div
+              style="
+                font-size: 1.5rem;
+                font-family: &quot;Courier New&quot;, monospace;
+                letter-spacing: 2px;
+                color: #1e293b;
+                background: white;
+                display: inline-block;
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: 2px dashed #cbd5e1;
+              "
+            >
+              {% for char in tape %} {% if char != "B" %}{{ char }}{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div
+          class="card info-card"
+          style="border-left: 5px solid #2563eb; margin-bottom: 20px"
+        >
+          <p>
+            <strong>Entrada original:</strong>
+            <span
+              style="
+                font-family: monospace;
+                font-size: large;
+                padding: 2px 6px;
+                border-radius: 4px;
+                color: #1db954;
+              "
+              >{{ initial_input_display }}</span
+            >
+          </p>
+          <p>
+            <strong>Estado actual:</strong> <code>{{ current_state }}</code> |
+            <strong>Pasos:</strong> {{ step_count }}
+          </p>
+        </div>
+
+        <div class="controls">
+          {% if not halted %}
+          <form action="{% url 'step_simulation' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Siguiente Paso (Step)</button>
+          </form>
+          <form action="{% url 'run_simulation' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="secondary">Ejecución Completa</button>
+          </form>
+          {% else %}
+          <div style="text-align: center; width: 100%">
+            <a href="{% url 'reset_simulation' %}">
+              <button class="secondary">Cargar nueva máquina</button>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %} {% if error %}
+      <div class="card error-card">
+        <p class="error-text"><strong>Error:</strong> {{ error }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

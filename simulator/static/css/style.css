@@ -1,0 +1,117 @@
+/* turing_sim/simulator/static/css/style.css */
+:root {
+  --bg: #121212;
+  --card: #1e1e1e;
+  --accent: #1db954;
+  --text: #e0e0e0;
+  --error: #ff4444;
+  --border: #333;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+}
+
+/* Tape Visualization */
+.tape-container {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 20px 0;
+  gap: 5px;
+}
+
+.cell {
+  width: 45px;
+  height: 45px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  position: relative;
+  background: #252525;
+}
+
+.cell.active {
+  border-color: var(--accent);
+  background: rgba(29, 185, 84, 0.1);
+}
+
+.head-pointer {
+  position: absolute;
+  bottom: -25px;
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+/* Controls & Forms */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button.secondary {
+  background: #444;
+}
+
+input[type="text"],
+input[type="file"] {
+  background: #333;
+  border: 1px solid #444;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.result-accepted {
+  color: var(--accent);
+}
+.result-rejected {
+  color: var(--error);
+}
+
+.error-card {
+  border-left: 5px solid var(--error);
+}
+
+.error-text {
+  color: var(--error);
+}
